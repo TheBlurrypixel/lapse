@@ -1,0 +1,22 @@
+{
+  "name": "lapse",
+  "version": "1.0.0",
+  "description": "timelapse cli\u001b[A",
+  "main": "lapse.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "pkg": "^5.8.1"
+  },
+  "pkg": {
+    "scripts": "./pubTool.js",
+    "targets": [
+      "node14-macos-x64",
+      "node14-win-x64"
+    ]
+  },
+  "bin": "./lapse.js",
+  "author": "",
+  "license": "ISC"
+}

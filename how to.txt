@@ -1,0 +1,82 @@
+npm i
+
+For icon replacement:
+For Windows BEFORE, build remove go into <User name>/.pkg-cache/ and replace fetched-v12.18.1-win-x64 with our version
+make sure to save a backup of original!
+
+Also stick with pkg 4.4.9, newer version does this updating of the cache files which makes replacing icon impossible
+
+for mac replace icon in Mac version AFTER build by replacing in OSX copying png (in preview program copy paste image not file), open Get Info on app, click on icon in upper left and paste
+
+USE 'gulp' to copy a fix from the com.blurrypixel.naru folder
+Look in gulpfile.js to see fix
+
+Tool Usage:
+
+If using the atob pubTool take the JSON and encode to base64 and resave
+pubTool.exe pubData.dat
+
+To Build:
+1. Run node gulpfile from SequenceControl root to copy PostPublish.js to pubTool atob folder
+
+2. From pubTool folder run the following commands:
+
+output=$(echo $(pwd) | sed -e 's/^\///' -e 's/\//\\\\/g' -e 's/^./\0:/')
+psCommand="\"$SYSTEMROOT\system32\WindowsPowerShell\v1.0\powershell.exe\" -Command "
+
+commandArgsWin="\"Compress-Archive -Force \"$output\\\\builds\\\\pubTool.exe\" \"$output\\\\builds\\\\pubTool-win\"\""
+fullCommandWin="$psCommand$commandArgsWin"
+commandArgsMac="\"Compress-Archive -Force \"$output\\\\builds\\\\pubTool\" \"$output\\\\builds\\\\pubTool-osx\"\""
+fullCommandMac="$psCommand$commandArgsMac"
+
+rmAllInDir="rm -f -r \"./builds/\"*"
+
+mvWin="mv ./builds/pubTool-win.exe ./builds/pubTool.exe"
+mkDirWin="mkdir -p ./builds/pubTool-win && cp ./builds/pubTool.exe ./builds/pubTool-win/pubTool.exe"
+evalWin="eval \"\$fullCommandWin\""
+delWin="rm -f ./builds/pubTool.exe"
+
+winCmd="$mvWin && $mkDirWin && $evalWin && $delWin"
+
+mvMac="mv ./builds/pubTool-macos ./builds/pubTool"
+mkDirMac="mkdir -p ./builds/pubTool-osx && cp ./builds/pubTool ./builds/pubTool-osx/pubTool"
+evalMac="eval \"\$fullCommandMac\""
+delMac="rm -f ./builds/pubTool"
+
+macCmd="$mvMac && $mkDirMac && $evalMac && $delMac"
+
+eval $rmAllInDir && node ./node_modules/pkg/lib-es5/bin.js ./package.json --out-path ./builds && eval $winCmd && eval $macCmd
+
+
+=============================================================================
+Use this example code to also copy the pubTool.exe to another folder for testing
+Example: Copy pubtool for dev
+
+output=$(echo $(pwd) | sed -e 's/^\///' -e 's/\//\\\\/g' -e 's/^./\0:/')
+psCommand="\"$SYSTEMROOT\system32\WindowsPowerShell\v1.0\powershell.exe\" -Command "
+
+commandArgsWin="\"Compress-Archive -Force \"$output\\\\builds\\\\pubTool.exe\" \"$output\\\\builds\\\\pubTool-win\"\""
+fullCommandWin="$psCommand$commandArgsWin"
+commandArgsMac="\"Compress-Archive -Force \"$output\\\\builds\\\\pubTool\" \"$output\\\\builds\\\\pubTool-osx\"\""
+fullCommandMac="$psCommand$commandArgsMac"
+
+rmAllInDir="rm -f -r \"./builds/\"*"
+
+mvWin="mv ./builds/pubTool-win.exe ./builds/pubTool.exe"
+mkDirWin="mkdir -p ./builds/pubTool-win && cp ./builds/pubTool.exe ./builds/pubTool-win/pubTool.exe"
+evalWin="eval \"\$fullCommandWin\""
+delWin="rm -f ./builds/pubTool.exe"
+
+winCmd="$mvWin && $mkDirWin && $evalWin && $delWin"
+
+mvMac="mv ./builds/pubTool-macos ./builds/pubTool"
+mkDirMac="mkdir -p ./builds/pubTool-osx && cp ./builds/pubTool ./builds/pubTool-osx/pubTool"
+evalMac="eval \"\$fullCommandMac\""
+delMac="rm -f ./builds/pubTool"
+
+macCmd="$mvMac && $mkDirMac && $evalMac && $delMac"
+
+copyTo="cp ./builds/pubTool-win/pubTool.exe ../temp/SOURCE/pubTool.exe"
+
+eval $rmAllInDir && node ./node_modules/pkg/lib-es5/bin.js ./package.json --out-path ./builds && eval $winCmd && eval $macCmd && eval $copyTo
+

@@ -1,0 +1,28 @@
+cd pubTool
+
+output=$(echo $(pwd) | sed -e 's/^\///' -e 's/\//\\\\/g' -e 's/^./\0:/')
+psCommand="\"$SYSTEMROOT\system32\WindowsPowerShell\v1.0\powershell.exe\" -Command "
+
+commandArgsWin="\"Compress-Archive -Force \"$output\\\\builds\\\\pubTool.exe\" \"$output\\\\builds\\\\pubTool-win\"\""
+fullCommandWin="$psCommand$commandArgsWin"
+commandArgsMac="\"Compress-Archive -Force \"$output\\\\builds\\\\pubTool\" \"$output\\\\builds\\\\pubTool-osx\"\""
+fullCommandMac="$psCommand$commandArgsMac"
+
+rmAllInDir="rm -f -r \"./builds/\"*"
+
+mvWin="mv ./builds/pubTool-win.exe ./builds/pubTool.exe"
+mkDirWin="mkdir -p ./builds/pubTool-win && cp ./builds/pubTool.exe ./builds/pubTool-win/pubTool.exe"
+evalWin="eval \"\$fullCommandWin\""
+delWin="rm -f ./builds/pubTool.exe"
+
+winCmd="$mvWin && $mkDirWin && $evalWin && $delWin"
+
+mvMac="mv ./builds/pubTool-macos ./builds/pubTool"
+mkDirMac="mkdir -p ./builds/pubTool-osx && cp ./builds/pubTool ./builds/pubTool-osx/pubTool"
+evalMac="eval \"\$fullCommandMac\""
+delMac="rm -f ./builds/pubTool"
+
+macCmd="$mvMac && $mkDirMac && $evalMac && $delMac"
+
+eval $rmAllInDir && node ./node_modules/pkg/lib-es5/bin.js ./package.json --out-path ./builds && eval $winCmd && eval $macCmd
+
