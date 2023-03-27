@@ -4,7 +4,7 @@
   "description": "timelapse cli\u001b[A",
   "main": "lapse.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "run": "node ./lapse.js"
   },
   "devDependencies": {
     "pkg": "^5.8.1"
