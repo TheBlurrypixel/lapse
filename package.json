@@ -18,5 +18,8 @@
   },
   "bin": "./lapse.js",
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "ffmpeg": "^0.0.4"
+  }
 }
